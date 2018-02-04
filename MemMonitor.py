@@ -79,7 +79,7 @@ import psutil
 import argparse
 
 
-class MemDetect():
+class MemMonitor():
     '''
     output the information of memory usage
     '''
@@ -87,7 +87,7 @@ class MemDetect():
         self.pid = pid
         self.period = period
 
-    def mem_detect(self):
+    def mem_monitor(self):
         p = psutil.Process(self.pid)
         mem = psutil.virtual_memory()
         localtime = time.asctime(time.localtime(time.time()))
@@ -100,13 +100,13 @@ class MemDetect():
         print("进程名称: %s\t内存占用百分比: %.2f%%" 
             %(p.name(), p.memory_percent()))
 
-    def detect_main(self):
+    def monitor_main(self):
         while os.path.isfile('/proc/%s/stat' %str(self.pid)):
-            mem_detect(int(self.pid))
+            mem_monitor(int(self.pid))
             time.sleep(int(self.period))
         print("--------the process is over--------")
 
-def mem_detect(pid):
+def mem_monitor(pid):
     p = psutil.Process(pid)
     mem = psutil.virtual_memory()
     localtime = time.asctime(time.localtime(time.time()))
@@ -119,16 +119,16 @@ def mem_detect(pid):
     print("进程名称: %s\t内存占用百分比: %.2f%%" 
         %(p.name(), p.memory_percent()))
 
-def detect_main(**kwargs):
+def monitor_main(**kwargs):
     while os.path.isfile('/proc/%s/stat' %str(kwargs['pid'])):
-        mem_detect(int(kwargs['pid']))
+        mem_monitor(int(kwargs['pid']))
         time.sleep(int(kwargs['period']))
     print("--------the process is over--------")
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=\
-            'detect the memory use of programme according to the pid')
+            'monitor the memory use of programme according to the pid')
     parser.add_argument('-p', '--pid', dest='pid', nargs='?', 
         default=os.getpid(), help='pid of the programme')
     parser.add_argument('-t', '--time', dest='period', nargs='?', 
@@ -137,7 +137,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # how to use
-    # $ python MemDetect.py (-p somepid) (-t timespan)
+    # $ python MemMonitor.py (-p somepid) (-t timespan)
 
     kwargs = vars(args)
-    detect_main(**kwargs)
+    monitor_main(**kwargs)
