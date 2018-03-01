@@ -1,52 +1,5 @@
 # coding: utf-8
 
-# MemTotal:       98954444 kB
-# MemFree:         7207264 kB
-# MemAvailable:    7728408 kB
-# Buffers:           38772 kB
-# Cached:           593300 kB
-# SwapCached:       402376 kB
-# Active:         83708512 kB
-# Inactive:        6576620 kB
-# Active(anon):   83478784 kB
-# Inactive(anon):  6180268 kB
-# Active(file):     229728 kB
-# Inactive(file):   396352 kB
-# Unevictable:           0 kB
-# Mlocked:               0 kB
-# SwapTotal:      100610044 kB
-# SwapFree:       19740960 kB
-# Dirty:                40 kB
-# Writeback:             0 kB
-# AnonPages:      89259056 kB
-# Mapped:            59032 kB
-# Shmem:              5968 kB
-# Slab:             585048 kB
-# SReclaimable:     456668 kB
-# SUnreclaim:       128380 kB
-# KernelStack:       22816 kB
-# PageTables:       476492 kB
-# NFS_Unstable:          0 kB
-# Bounce:                0 kB
-# WritebackTmp:          0 kB
-# CommitLimit:    150087264 kB
-# Committed_AS:   129484588 kB
-# VmallocTotal:   34359738367 kB
-# VmallocUsed:           0 kB
-# VmallocChunk:          0 kB
-# HardwareCorrupted:     0 kB
-# AnonHugePages:  26757120 kB
-# CmaTotal:              0 kB
-# CmaFree:               0 kB
-# HugePages_Total:       0
-# HugePages_Free:        0
-# HugePages_Rsvd:        0
-# HugePages_Surp:        0
-# Hugepagesize:       2048 kB
-# DirectMap4k:      169632 kB
-# DirectMap2M:    17606656 kB
-# DirectMap1G:    84934656 kB
-
 ## os 监控内存
 # import time
 
@@ -91,6 +44,7 @@ class MemMonitor():
         p = psutil.Process(self.pid)
         mem = psutil.virtual_memory()
         localtime = time.asctime(time.localtime(time.time()))
+        print('------------------------------------------------------')
         print(localtime)
         print('Total: %.2fGB\tFree: %.2fGB %.2f%%\t \
             Available: %.2fGB %.2f%%\tMEM_USE: %.2fGB %.2f%%' % 
@@ -99,10 +53,11 @@ class MemMonitor():
                 mem.used/1024**3, mem.used/mem.total*100))
         print("进程名称: %s\t内存占用百分比: %.2f%%" 
             %(p.name(), p.memory_percent()))
+        print('------------------------------------------------------')
 
     def monitor_main(self):
         while os.path.isfile('/proc/%s/stat' %str(self.pid)):
-            mem_monitor(int(self.pid))
+            self.mem_monitor(int(self.pid))
             time.sleep(int(self.period))
         print("--------the process is over--------")
 
@@ -110,6 +65,7 @@ def mem_monitor(pid):
     p = psutil.Process(pid)
     mem = psutil.virtual_memory()
     localtime = time.asctime(time.localtime(time.time()))
+    print('------------------------------------------------------')
     print(localtime)
     print('Total: %.2fGB\tFree: %.2fGB %.2f%%\t \
         Available: %.2fGB %.2f%%\tMEM_USE: %.2fGB %.2f%%' % 
@@ -118,6 +74,7 @@ def mem_monitor(pid):
             mem.used/1024**3, mem.used/mem.total*100))
     print("进程名称: %s\t内存占用百分比: %.2f%%" 
         %(p.name(), p.memory_percent()))
+    print('------------------------------------------------------')
 
 def monitor_main(**kwargs):
     while os.path.isfile('/proc/%s/stat' %str(kwargs['pid'])):
